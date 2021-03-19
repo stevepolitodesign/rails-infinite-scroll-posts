@@ -58,5 +58,3 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "turbo-rails", "~> 0.5.9"
 
 gem "faker", "~> 2.17", :group => :development
-
-gem "order_query", "~> 0.5.1"
