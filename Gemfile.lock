@@ -60,8 +60,6 @@ GEM
       minitest (>= 5.1)
       tzinfo (~> 2.0)
       zeitwerk (~> 2.3)
-    acts_as_list (1.0.3)
-      activerecord (>= 4.2)
     addressable (2.7.0)
       public_suffix (>= 2.0.2, < 5.0)
     bindex (0.8.1)
@@ -112,6 +110,9 @@ GEM
       racc (~> 1.4)
     nokogiri (1.11.2-x86_64-darwin)
       racc (~> 1.4)
+    order_query (0.5.1)
+      activerecord (>= 5.0, < 7.0)
+      activesupport (>= 5.0, < 7.0)
     pg (1.2.3)
     public_suffix (4.0.6)
     puma (5.2.2)
@@ -211,13 +212,13 @@ PLATFORMS
   universal-darwin-20
 
 DEPENDENCIES
-  acts_as_list (~> 1.0)
   bootsnap (>= 1.4.4)
   byebug
   capybara (>= 3.26)
   faker (~> 2.17)
   jbuilder (~> 2.7)
   listen (~> 3.3)
+  order_query (~> 0.5.1)
   pg (~> 1.1)
   puma (~> 5.0)
   rack-mini-profiler (~> 2.0)
