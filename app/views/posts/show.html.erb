@@ -1,5 +1,4 @@
 <p id="notice"><%= notice %></p>
-
 <%= turbo_frame_tag dom_id(@post) do %>
   <p>
     <strong>Title:</strong>
@@ -11,5 +10,5 @@
   </p>
   <%= link_to 'Edit', edit_post_path(@post) %> |
   <%= link_to 'Back', posts_path %>
+  <%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) if @next_post.present? %>
 <% end %>
-<%= turbo_frame_tag "post_200", src: post_path(Post.last) %>
