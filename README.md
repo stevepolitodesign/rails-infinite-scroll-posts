@@ -1,24 +1,89 @@
-# README
+# Rails Infinite Scrolling Posts
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+## Outline
 
-Things you may want to cover:
+```ruby
+# app/models/concerns/navigable.rb
+module Navigable
+  extend ActiveSupport::Concern
 
-* Ruby version
+	def next
+			self.class.where("id > ?", self.id).order(id: :asc).limit(1).first
+	end
 
-* System dependencies
+	def previous
+			self.class.where("id < ?", self.id).order(id: :desc).limit(1).first
+	end
+end
+```
 
-* Configuration
+```ruby
+# app/models/post.rb
+class Post < ApplicationRecord
+  include Navigable
+end
+```
 
-* Database creation
+```ruby
+# app/controllers/posts_controller.rb
+class PostsController < ApplicationController
+	...
+  def show
+		@post = Post.find(params[:id])
+    @next_post = @post.next
+  end
+	...
+end
+```
 
-* Database initialization
+```erb
+<!-- app/views/posts/show.html.erb -->
+<%= turbo_frame_tag dom_id(@post) do %>
+  <div data-controller="infinite-scroll" data-infinite-scroll-path-value="<%= post_path(@post) %>" data-infinite-scroll-target="entry">
+      <%= @post.title %>
+      <%= @post.body %>
+    	<%= link_to 'Edit', edit_post_path(@post), data: { turbo_frame: "_top" } %> |
+    	<%= link_to 'Back', posts_path, data: { turbo_frame: "_top" }  %>
+  </div>
+  <%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) do %>
+    Loading...
+  <% end if @next_post.present? %>
+<% end %>
+```
 
-* How to run the test suite
+```javascript
+// app/javascript/controllers/infinite_scroll_controller.js
+import { Controller } from "stimulus"
 
-* Services (job queues, cache servers, search engines, etc.)
+export default class extends Controller {
+    static targets = ["entry"]
+    static values = {
+        path: String,
+    }
 
-* Deployment instructions
+  connect() {
+    this.createObserver();
+  }
 
-* ...
+  createObserver() {
+    let observer;
+  
+    let options = {
+      threshold: 1
+    };
+    
+    observer = new IntersectionObserver(entries => this.handleIntersect(entries), options);
+    observer.observe(this.entryTarget);
+  }
+
+  handleIntersect(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // https://github.com/turbolinks/turbolinks/issues/219#issuecomment-376973429
+        history.replaceState(history.state, "", this.pathValue);
+      }
+    });
+  }
+ 
+}
+```
