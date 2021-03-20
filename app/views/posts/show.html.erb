@@ -12,5 +12,7 @@
     <%= link_to 'Edit', edit_post_path(@post), data: { turbo_frame: "_top" } %> |
     <%= link_to 'Back', posts_path, data: { turbo_frame: "_top" }  %>
   </div>
-  <%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) if @next_post.present? %>
+  <%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) do %>
+    Loading...
+  <% end if @next_post.present? %>
 <% end %>
