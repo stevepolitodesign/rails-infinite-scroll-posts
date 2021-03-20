@@ -20,7 +20,7 @@ end
 ```ruby
 # app/models/post.rb
 class Post < ApplicationRecord
- 	include Navigable
+	include Navigable
 end
 ```
 
@@ -28,10 +28,10 @@ end
 # app/controllers/posts_controller.rb
 class PostsController < ApplicationController
 	...
-  def show
+	def show
 		@post = Post.find(params[:id])
-    @next_post = @post.next
-  end
+		@next_post = @post.next
+	end
 	...
 end
 ```
@@ -39,15 +39,15 @@ end
 ```erb
 <!-- app/views/posts/show.html.erb -->
 <%= turbo_frame_tag dom_id(@post) do %>
-  <div data-controller="infinite-scroll" data-infinite-scroll-path-value="<%= post_path(@post) %>" data-infinite-scroll-target="entry">
+	<div data-controller="infinite-scroll" data-infinite-scroll-path-value="<%= post_path(@post) %>" data-infinite-scroll-target="entry">
 		<%= @post.title %>
 		<%= @post.body %>
 		<%= link_to 'Edit', edit_post_path(@post), data: { turbo_frame: "_top" } %> |
 		<%= link_to 'Back', posts_path, data: { turbo_frame: "_top" }  %>
-  </div>
-  <%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) do %>
-    Loading...
-  <% end if @next_post.present? %>
+	</div>
+	<%= turbo_frame_tag dom_id(@next_post), loading: :lazy, src: post_path(@next_post) do %>
+		Loading...
+	<% end if @next_post.present? %>
 <% end %>
 ```
 
@@ -60,29 +60,29 @@ export default class extends Controller {
 			path: String,
 	}
 
-  connect() {
-    this.createObserver();
-  }
+	connect() {
+		this.createObserver();
+	}
 
-  createObserver() {
-    let observer;
-  
-    let options = {
-      threshold: .5
-    };
-    
-    observer = new IntersectionObserver(entries => this.handleIntersect(entries), options);
-    observer.observe(this.entryTarget);
-  }
+	createObserver() {
+		let observer;
 
-  handleIntersect(entries) {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        // https://github.com/turbolinks/turbolinks/issues/219#issuecomment-376973429
-        history.replaceState(history.state, "", this.pathValue);
-      }
-    });
-  }
+		let options = {
+			threshold: .5
+		};
+
+		observer = new IntersectionObserver(entries => this.handleIntersect(entries), options);
+		observer.observe(this.entryTarget);
+	}
+
+	handleIntersect(entries) {
+		entries.forEach(entry => {
+			if (entry.isIntersecting) {
+				// https://github.com/turbolinks/turbolinks/issues/219#issuecomment-376973429
+				history.replaceState(history.state, "", this.pathValue);
+			}
+		});
+	}
 
 }
 ```
