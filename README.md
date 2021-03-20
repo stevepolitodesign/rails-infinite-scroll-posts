@@ -1,5 +1,7 @@
 # Rails Infinite Scrolling Posts
 
+![demo](public/demo.gif)
+
 ## Outline
 
 ```ruby
