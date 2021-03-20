@@ -20,7 +20,7 @@ end
 ```ruby
 # app/models/post.rb
 class Post < ApplicationRecord
-  include Navigable
+ 	include Navigable
 end
 ```
 
