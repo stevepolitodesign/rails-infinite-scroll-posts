@@ -12,20 +12,21 @@ export default class extends Controller {
 
   createObserver() {
     let observer;
-    this.handleIntersect = this.handleIntersect.bind(this)
   
     let options = {
-      root: null,
-      rootMargin: "0px",
-      threshold: 1,
+      threshold: 1
     };
     
-    observer = new IntersectionObserver(this.handleIntersect, options);
+    observer = new IntersectionObserver(entries => this.handleIntersect(entries), options);
     observer.observe(this.entryTarget);
   }
 
-  handleIntersect() {
-    history.pushState({}, "", this.pathValue);
+  handleIntersect(entries) {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        history.pushState({}, "", this.pathValue);
+      }
+    });
   }
 
 }
