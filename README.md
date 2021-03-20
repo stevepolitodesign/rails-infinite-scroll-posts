@@ -69,7 +69,8 @@ export default class extends Controller {
     let observer;
 
     let options = {
-      threshold: .5
+      // https://github.com/w3c/IntersectionObserver/issues/124#issuecomment-476026505
+      threshold: [0, 1.0]
     };
 
     observer = new IntersectionObserver(entries => this.handleIntersect(entries), options);
