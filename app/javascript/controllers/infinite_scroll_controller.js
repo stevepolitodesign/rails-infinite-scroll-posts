@@ -24,9 +24,10 @@ export default class extends Controller {
   handleIntersect(entries) {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        history.pushState({}, "", this.pathValue);
+        // https://github.com/turbolinks/turbolinks/issues/219#issuecomment-376973429
+        history.replaceState(history.state, "", this.pathValue);
       }
     });
   }
-
+ 
 }
